@@ -1,7 +1,10 @@
 views['login'] = ->
+    $.ajaxSetup({ cache: true });
     $.getScript('//connect.facebook.net/en_US/all.js', ->
         window.fbAsyncInit = ->
-            FB.init(appId: '502137286574807')
+            FB.init
+                appId: '502137286574807'
+                status: true
     )
 
     $('#login-fb').click ->
@@ -9,6 +12,7 @@ views['login'] = ->
         FB.getLoginStatus(facebookStatusCallback)
 
     facebookStatusCallback = (response) ->
+        console.log response
         if response.status == 'connected'
             accessToken = response.authResponse.accessToken
             FB.api('/me?field=name', (response) ->
@@ -17,4 +21,4 @@ views['login'] = ->
                 $('#login-form').submit()
             )
         else
-            FB.login(facebookStatusCallback, scope: 'name')
+            FB.login(facebookStatusCallback)
