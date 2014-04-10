@@ -1,7 +1,7 @@
 views['login'] = ->
     $.getScript('//connect.facebook.net/en_US/all.js', ->
         window.fbAsyncInit = ->
-            FB.init(appId: '419278264854168')
+            FB.init(appId: '502137286574807')
     )
 
     $('#login-fb').click ->
