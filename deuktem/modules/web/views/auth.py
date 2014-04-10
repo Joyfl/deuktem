@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from .blueprint import blueprint
-from flask import request, render_template, flash, redirect, url_for
+from flask import request, render_template, flash, current_app, redirect,\
+    url_for
 from flask.ext.login import login_user, logout_user
 from deuktem.models import User
 from deuktem.ext import db
@@ -23,6 +24,10 @@ def login():
     me = facebook_auth(facebook_token)
     if not me:
         flash(u"페이스북 인증에 실패했습니다.")
+        return render_template('login.html'), 400
+
+    if me['id'] not in current_app.config['ALLOWED_FACEBOOK_USERS']:
+        flash(u"허용되지 않은 사용자입니다.")
         return render_template('login.html'), 400
 
     user = User.query.filter_by(facebook_id=str(me['id'])).first()
