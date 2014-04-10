@@ -1,0 +1,17 @@
+{
+  "name": "deuktem",
+  "version": "0.0.0",
+  "license": "MIT",
+  "ignore": [
+  "**/.*",
+  "node_modules",
+  "bower_components",
+  "deuktem/static/components",
+  "test",
+  "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.1.1",
+    "jquery": "~2.1.0"
+  }
+}

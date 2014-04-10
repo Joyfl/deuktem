@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+<div id="item-list" class="container">
+  <ul class="list-group">
+    {% for item in items %}
+      <li id="item-{{ item.id }}" class="list-group-item">
+        <div class="pull-left item-list-photo-wrap">
+          <img class="item-list-photo" src="{{ item.url }}" alt="{{ item.name }}"></img>
+        </div>
+
+        <div class="item-list-wish-wrap pull-right">
+          <a class="btn btn-primary item-list-wish">희망하기</a>
+        </div>
+
+        <div class="media-body">
+          <h4 class="media-heading">{{ item.name }}</h4>
+          <p>{{ item.description }}</p>
+          {% for wisher in item.wishers %}
+            <label class="label label-default">{{ wisher.name }}</label>
+          {% endfor %}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+  <title>득템</title>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+  {% assets "css_lib" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}" />
+  {% endassets %}
+
+  {% assets "css_dist" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}" />
+  {% endassets %}
+
+  {% assets "js_lib" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+
+  {% assets "js_dist" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+</head>
+
+<body>
+  <header class="navbar navbar-default">
+    <div class="container">
+      <a class="navbar-brand" href="/">득템</a>
+      <ul class="nav navbar-nav">
+        <li id="nav-item-list">
+          <a href="{{ url_for('web.item_list') }}">아이템 목록</a>
+        </li>
+        <li id="nav-item-new">
+          <a href="{{ url_for('web.item_new') }}">새 아이템</a>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          {% if not current_user.is_authenticated() %}
+            <a class="navbar-item pull-right" href="{{ url_for('web.login') }}">로그인</a>
+          {% else %}
+            <a class="navbar-item pull-right" href="{{ url_for('web.logout') }}">{{ current_user.name }} 로그아웃</a>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  {% block body %}{% endblock %}
+
+  <footer>
+    <div class="container">
+      <p class="text-center text-muted small">© 2014 Joyfl Inc.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block body %}
+  <div id="item-new" class="container">
+    <form id="item-new-form" method="POST" action="{{ url_for('web.item_new') }}" enctype="multipart/form-data">
+
+      <div id="item-new-error" class="alert alert-danger fade hidden"></div>
+
+      <div class="item-new-photo-wrap pull-left">
+        <img id="item-new-photo"></img>
+        <div class="btn btn-default item-new-file-wrap">
+          <span>사진 선택</span>
+        </div>
+        <input id="item-new-file" type="file" name="photo" accept="image/*"></input>
+      </div>
+
+      <div class="item-new-input-wrap">
+        <div class="form-group">
+          <label for="item-new-name">이름(*):</label>
+          <input id="item-new-name" class="form-control" name="name"></input>
+        </div>
+
+        <div class="form-group">
+          <label for="item-new-description">참고사항:</label>
+          <textarea id="item-new-description" class="form-control" name="description"></textarea>
+        </div>
+
+        <button id="item-new-submit" class="btn btn-primary pull-right">등록하기</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

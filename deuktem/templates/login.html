@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block body %}
+  <div id="login" class="container text-center">
+    <h1>로그인하기</h1>
+    <a id="login-fb" class="btn btn-primary">Facebook으로 로그인</a>
+    <form id="login-form" method="POST" action="{{ url_for('web.login') }}" class="text-center" hidden>
+      <input id="login-facebook-id" name="facebook_id" hidden></input>
+      <input id="login-facebook-token" name="facebook_token" hidden></input>
+    </form>
+  </div>
+{% endblock %}
