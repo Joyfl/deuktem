@@ -252,33 +252,50 @@ def setup_rmq():
     if not local("sudo rabbitmqctl add_user '%(rmq_user_name)s' "
                  "'%(rmq_user_password)s'" % config).succeeded:
         print red("Failed"), yellow("(potentially exists already)")
+    else:
+        print blue("Done")
 
     print blue("* Adding vhost..."),
-    if not local("sudo rabbitmqctl add_vhost '%(rmq_vhost)s" % config):
+    if not local("sudo rabbitmqctl add_vhost '%(rmq_vhost)s'" % config):
         print red("Failed"), yellow("(potentially exists already)")
+    else:
+        print blue("Done")
 
     print blue("* Setting permissions..."),
     if not local("sudo rabbitmqctl set_permissions -p '%(rmq_vhost)s' "
                  "'%(rmq_user_name)s' '.*' '.*' '.*'" % config):
         print red("Failed"), yellow("(potentially exists already)")
+    else:
+        print blue("Done")
 
 
-# @_setup
+@_setup
 def celery(cmd=None, worker=None):
     if cmd == 'start':
-        local("celery multi start %(celery_workers)s "
-              "--logfile=%(path_celery_log)s "
-              "--pidfile=%(path_celery_pid)s" % config)
+        r = local("celery multi start %(celery_workers)s"
+                  " --hostname=%(celery_hostname)s"
+                  " -B -A deuktem.tasks"  # celery beat
+                  " --logfile=%(path_celery_log)s "
+                  " --pidfile=%(path_celery_pid)s" % config, capture=True)
+        print r.stderr
 
     elif cmd == 'restart':
-        local("celery multi restart %(celery_workers)s "
-              "--logfile=%(path_celery_log)s "
-              "--pidfile=%(path_celery_pid)s" % config)
+        r = local("celery multi restart %(celery_workers)s"
+                  " --hostname=%(celery_hostname)s"
+                  " -B -A deuktem.tasks"  # celery beat
+                  " --logfile=%(path_celery_log)s "
+                  " --pidfile=%(path_celery_pid)s" % config, capture=True)
+        print r.stderr
 
     elif cmd == 'stop':
+        print blue("* Killing celery processes..."),
         local("ps aux | grep 'celery worker' | grep '%(project_name)s' | "
-              "awk '{print $2}' | xargs kill -9 2>/dev/null" % config)
+              "awk '{print $2}' | xargs kill -9" % config)
+        print blue("Done")
+
+        print blue("* Removing pid files..."),
         local("rm %(path_run)s/celery*.pid 2>/dev/null" % config)
+        print blue("Done")
 
     elif cmd == 'log':
         if worker is None:
@@ -288,7 +305,8 @@ def celery(cmd=None, worker=None):
         local("tail -f %(path_log)s/celery%(worker)s.log" % conf)
 
     elif cmd == 'status':
-        local("celery status")
+        r = local("celery status", capture=True)
+        print r.stdout
 
     else:
         abort(red("Usage: fab celery:[start|restart|stop|log|status]"))

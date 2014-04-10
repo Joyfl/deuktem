@@ -46,6 +46,8 @@ class Item(db.Model):
     description = db.Column(db.Text)
     due = db.Column(db.DateTime, nullable=False, default=tomorrow())
     wishers = db.relationship('User', secondary=wishlist, lazy='dynamic')
+    winner = db.relationship('User')
+    winner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     @property
     def url(self):

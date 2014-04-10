@@ -29,10 +29,13 @@
       <a class="navbar-brand" href="/">득템하자!</a>
       <ul class="nav navbar-nav">
         <li id="nav-item-list">
-          <a href="{{ url_for('web.item_list') }}">아이템 목록</a>
+          <a href="{{ url_for('web.item_list') }}">진행중</a>
+        </li>
+        <li id="nav-win-list">
+          <a href="{{ url_for('web.win_list') }}">득템!</a>
         </li>
         <li id="nav-item-new">
-          <a href="{{ url_for('web.item_new') }}">새 아이템</a>
+          <a href="{{ url_for('web.item_new') }}">아이템 추가</a>
         </li>
       </ul>
 

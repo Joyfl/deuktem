@@ -16,6 +16,14 @@ def item_list():
     return render_template('item_list.html', items=items)
 
 
+@blueprint.route('/wins')
+@login_required
+def win_list():
+    query = Item.query
+    items = query.filter(Item.winner_id != 0).order_by(Item.id.desc()).all()
+    return render_template('win_list.html', items=items)
+
+
 @blueprint.route('/items/new', methods=('GET', 'POST'))
 @login_required
 def item_new():

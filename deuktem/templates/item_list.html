@@ -1,9 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
 <div id="item-list" class="container">
-<div class="jumbotron">
-  <h1>우리모두 득템해서<br />알뜰하게 먹고살자</h1>
-</div>
+  <div class="jumbotron">
+    <h1>우리모두 득템해서<br />알뜰하게 먹고살자</h1>
+    <h3>사무실 공동 물품 자동 분배 시스템</h3>
+    <p>날짜가 되면 득템하는 사람이 정해집니다!</p>
+  </div>
 
   <ul class="list-group">
     {% for item in items %}

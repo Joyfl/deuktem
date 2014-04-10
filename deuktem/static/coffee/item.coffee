@@ -35,6 +35,10 @@ views['item-list'] = ->
                 return
 
 
+views['win-list'] = ->
+    $('#nav-win-list').addClass('active')
+
+
 views['item-new'] = ->
     $('#nav-item-new').addClass('active')
 

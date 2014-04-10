@@ -50,5 +50,6 @@ rmq_vhost = 'deuktem'
 """
 Celery
 """
-celery_workers = 1
+celery_workers = 4
 celery_name_prefix = 'deuktem'
+celery_hostname = 'deuktem.joyfl.net'
