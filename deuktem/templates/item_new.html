@@ -1,6 +1,14 @@
 {% extends "layout.html" %}
 {% block body %}
   <div id="item-new" class="container">
+    <div class="jumbotron">
+      <h1>수정 불가 삭제 불가</h1>
+      <p>
+        기본 배정일인 다음날까지 배정이 되지 않으면<br />
+        자동으로 배정일이 하루 늘어난다
+        </p>
+    </div>
+
     <form id="item-new-form" method="POST" action="{{ url_for('web.item_new') }}" enctype="multipart/form-data">
 
       <div id="item-new-error" class="alert alert-danger fade hidden"></div>

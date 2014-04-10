@@ -19,6 +19,7 @@ path_static = join(path_root, project_name, 'static')
 path_venv = join(path_root, 'venv')
 path_celery_log = join(path_log, 'celery%n.log')
 path_celery_pid = join(path_run, 'celery%n.pid')
+path_celery_schedule = join(path_run, 'celerybeat-schedule')
 
 
 """
@@ -50,6 +51,6 @@ rmq_vhost = 'deuktem'
 """
 Celery
 """
-celery_workers = 4
+celery_workers = 1
 celery_name_prefix = 'deuktem'
 celery_hostname = 'deuktem.joyfl.net'

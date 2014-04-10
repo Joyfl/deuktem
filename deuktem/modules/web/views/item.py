@@ -12,7 +12,8 @@ import os
 @blueprint.route('/items')
 @login_required
 def item_list():
-    items = Item.query.order_by(Item.id.desc()).all()
+    query = Item.query
+    items = query.filter(Item.winner_id == None).order_by(Item.id.desc()).all()
     return render_template('item_list.html', items=items)
 
 

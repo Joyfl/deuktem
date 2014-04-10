@@ -275,6 +275,7 @@ def celery(cmd=None, worker=None):
         r = local("celery multi start %(celery_workers)s"
                   " --hostname=%(celery_hostname)s"
                   " -B -A deuktem.tasks"  # celery beat
+                  " --schedule=%(path_celery_schedule)s"
                   " --logfile=%(path_celery_log)s "
                   " --pidfile=%(path_celery_pid)s" % config, capture=True)
         print r.stderr
@@ -283,6 +284,7 @@ def celery(cmd=None, worker=None):
         r = local("celery multi restart %(celery_workers)s"
                   " --hostname=%(celery_hostname)s"
                   " -B -A deuktem.tasks"  # celery beat
+                  " --schedule=%(path_celery_schedule)s"
                   " --logfile=%(path_celery_log)s "
                   " --pidfile=%(path_celery_pid)s" % config, capture=True)
         print r.stderr
@@ -297,19 +299,20 @@ def celery(cmd=None, worker=None):
         local("rm %(path_run)s/celery*.pid 2>/dev/null" % config)
         print blue("Done")
 
-    elif cmd == 'log':
-        if worker is None:
-            abort(red("Usage: fab celery:log,[worker_number]"))
-        conf = config.copy()
-        conf.update(worker=worker)
-        local("tail -f %(path_log)s/celery%(worker)s.log" % conf)
-
     elif cmd == 'status':
         r = local("celery status", capture=True)
         print r.stdout
 
     else:
         abort(red("Usage: fab celery:[start|restart|stop|log|status]"))
+
+
+def celery_log(worker=None):
+    if worker is None:
+        abort(red("Usage: fab celery_log:[worker_number]"))
+    conf = config.copy()
+    conf.update(worker=worker)
+    local("tail -f %(path_log)s/celery%(worker)s.log" % conf)
 
 
 """
