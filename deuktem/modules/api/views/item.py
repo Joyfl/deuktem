@@ -1,35 +1,41 @@
 # -*- coding: utf8 -*-
 
 from .blueprint import blueprint
-from flask import request, current_app
+from flask.ext.login import login_required, current_user
 from deuktem.models import Item
 from deuktem.ext import db
-from deuktem.decorators import json_response, cors
-import os
+from deuktem.decorators import json_response
 
 
-@blueprint.route('/items', methods=('POST',))
-@cors
+@blueprint.route('/items/<int:id>/wish', methods=('POST',))
+@login_required
 @json_response
-def item_new():
-    photo = request.files.get('photo')
-    name = request.forms.get('name')
-    description = request.forms.get('description')
-
-    item = Item()
-    item.name = name
-    item.description = description
-
-    db.session.add(item)
-    db.session.commit()
-
-    if photo:
-        filename = 'item_%d.png' % item.id
-        path = os.path.join(current_app.root_path,
-                            '../../var/upload',
-                            filename)
-        photo.save(path)
-        item.filename = filename
+def item_wish_new(id):
+    item = Item.query.get_or_404(id)
+    item.wishers.append(current_user)
+    try:
         db.session.commit()
+    except:
+        db.session.rollback()
+        return {}, 400
+    return {
+        'id': current_user.id,
+        'name': current_user.name
+    }
 
-    return {}, 201
+
+@blueprint.route('/items/<int:id>/wish', methods=('DELETE',))
+@login_required
+@json_response
+def item_wish_delete(id):
+    item = Item.query.get_or_404(id)
+    item.wishers.remove(current_user)
+    try:
+        db.session.commit()
+    except:
+        db.session.rollback()
+        return {}, 400
+    return {
+        'id': current_user.id,
+        'name': current_user.name
+    }

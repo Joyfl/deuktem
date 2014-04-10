@@ -3,7 +3,7 @@
 
 from deuktem.ext import db
 from flask import current_app
-from flask.ext.login import UserMixin
+from flask.ext.login import UserMixin, current_user
 import datetime
 
 
@@ -55,4 +55,12 @@ class Item(db.Model):
         return 'http://%s/static/image/placeholder.jpg' % (
             current_app.config['SERVER_NAME']
         )
+
+    @property
+    def wished(self):
+        return db.session.query(wishlist).filter(
+            wishlist.c.user_id == current_user.id
+        ).filter(
+            wishlist.c.item_id == self.id
+        ).count() != 0
 

@@ -1,6 +1,39 @@
 views['item-list'] = ->
     $('#nav-item-list').addClass('active')
 
+    $('.item-list-wish').click ->
+        button = $(this)
+        itemId = button.data('item-id')
+        wished = button.data('wished')
+        $.ajax
+            type: if not wished then 'POST' else 'DELETE'
+            url: 'http://deuktem.joyfl.net/api/items/' + itemId + '/wish'
+            dataType: 'json'
+            crossDomain: true
+            success: (r) ->
+                if not wished
+                    wishers = $('#item-list-' + itemId + ' .item-list-wishers')
+                    label = $('<label />', {
+                        id: 'item-' + itemId + '-wisher-' + r['id'],
+                        class: 'label label-default',
+                        text: r['name']
+                    })
+                    wishers.append(label)
+
+                    button.data('wished', true)
+                    button.text('희망취소')
+                    button.removeClass('btn-primary')
+                    button.addClass('btn-danger')
+                else
+                    wisher = $('#item-' + itemId + '-wisher-' + r['id'])
+                    wisher.remove()
+                    button.data('wished', false)
+                    button.text('희망하기')
+                    button.removeClass('btn-danger')
+                    button.addClass('btn-primary')
+            error: (xhr) ->
+                return
+
 
 views['item-new'] = ->
     $('#nav-item-new').addClass('active')
