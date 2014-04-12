@@ -3,6 +3,7 @@
 from .blueprint import blueprint
 from flask import render_template, request, current_app, redirect, url_for
 from flask.ext.login import login_required
+from wand.image import Image
 from deuktem.models import Item
 from deuktem.ext import db
 import os
@@ -45,13 +46,29 @@ def item_new():
 
         db.session.add(item)
         db.session.commit()
-        
-        if photo:
+
+        with Image(file=photo) as img:
             filename = 'item_%d.png' % item.id
             path = os.path.join(current_app.root_path,
                                 '../../var/upload',
                                 filename)
-            photo.save(path)
+
+            # resize image
+            size = current_app.config['PHOTO_MAX_RESOLUTION']
+            if img.width > size or img.height > size:
+                if img.width > img.height:
+                    width = size
+                    height = int(size * 1.0 * img.height / img.width)
+                elif img.width < img.height:
+                    height = size
+                    width = int(size * 1.0 * img.width / img.height)
+                else:
+                    width = size
+                    height = size
+                img.resize(width=width, height=height)
+
+            # save
+            img.save(filename=path)
             item.photo_filename = filename
             db.session.commit()
 
