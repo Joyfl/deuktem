@@ -2,9 +2,9 @@
 
 from .blueprint import blueprint
 from flask import render_template, request, current_app, redirect, url_for
-from flask.ext.login import login_required
+from flask.ext.login import login_required, current_user
 from wand.image import Image
-from deuktem.models import Item
+from deuktem.models import Item, User
 from deuktem.ext import db
 import os
 
@@ -21,9 +21,22 @@ def item_list():
 @blueprint.route('/wins')
 @login_required
 def win_list():
-    items = Item.query.filter(Item.winner_id != 0)\
-        .order_by(Item.id.desc()).all()
-    return render_template('win_list.html', items=items)
+    filter = request.args.get('filter', 'all')
+    uid = request.args.get('uid')
+
+    query = Item.query
+    if filter == 'mine':
+        query = query.filter(Item.winner_id == current_user.id)
+    elif filter == 'user' and uid is not None:
+        query = query.filter(Item.winner_id == uid)
+    else:
+        query = query.filter(Item.winner_id != 0)
+    items = query.order_by(Item.id.desc()).all()
+    user_query = User.query.filter(User.id != current_user.id)
+    selected_user = user_query.filter_by(id=uid).first()
+    users = user_query.all()
+    return render_template('win_list.html', items=items, users=users,
+                           filter=filter, selected_user=selected_user)
 
 
 @blueprint.route('/items/new', methods=('GET', 'POST'))

@@ -6,6 +6,39 @@
       <p>이제 그냥 가져가면 된다</p>
     </div>
 
+    {# <div class="win-list-filter-wrap text-center">
+      <div class="btn-group">
+        <a class="btn btn-primary">모두 보기</a>
+        <a class="btn btn-default">내 득템 보기</a>
+      </div>
+    </div> #}
+
+    <ul class="nav nav-tabs win-list-filter">
+      <li class="{{ 'active' if filter == 'all' }}">
+        <a href="?filter=all">모두 보기</a>
+      </li>
+      <li class="{{ 'active' if filter == 'mine' }}">
+        <a href="?filter=mine">내 득템 보기</a>
+      </li>
+      <li class="dropdown {{ 'active' if filter == 'user' }}">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          {% if not selected_user %}
+            다른사람 득템 보기
+          {% else %}
+            {{ selected_user.name }}
+          {% endif %}
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          {% for user in users %}
+            <li class="{{ 'active' if selected_user.id == user.id }}">
+              <a href="?filter=user&uid={{ user.id }}">{{ user.name }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </li>
+    </ul>
+
     <ul class="list-group">
     {% for item in items %}
       <li id="item-list-{{ item.id }}" class="list-group-item">
@@ -16,12 +49,19 @@
         <div class="media-body">
           <h4 class="media-heading">
             {{ item.name }}
-            <small>~ {{ item.due.strftime('%m/%d') }}</small>
           </h4>
-        <p>{{ item.description }}</p>
-
-          <label class="label label-default">{{ item.winner.name }}</label>
+          <p>{{ item.description }}</p>
+          <p>
+            <label class="label label-primary">{{ item.winner.name }}</label>
+            <small>님이 </small>
+            <label class="label label-info">{{ item.due.strftime('%m') }}월 {{ item.due.strftime('%d') }}일</label>
+            에 득템!
+          </p>
         </div>
+      </li>
+    {% else %}
+      <li class="list-group-item">
+        ㅠㅠ
       </li>
     {% endfor %}
   </ul>
