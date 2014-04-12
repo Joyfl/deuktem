@@ -13,16 +13,16 @@ import os
 @blueprint.route('/items')
 @login_required
 def item_list():
-    query = Item.query
-    items = query.filter(Item.winner_id == None).order_by(Item.id.desc()).all()
+    items = Item.query.filter(Item.winner_id == None)\
+        .order_by(Item.due).order_by(Item.name).all()
     return render_template('item_list.html', items=items)
 
 
 @blueprint.route('/wins')
 @login_required
 def win_list():
-    query = Item.query
-    items = query.filter(Item.winner_id != 0).order_by(Item.id.desc()).all()
+    items = Item.query.filter(Item.winner_id != 0)\
+        .order_by(Item.id.desc()).all()
     return render_template('win_list.html', items=items)
 
 
@@ -66,6 +66,19 @@ def item_new():
                     width = size
                     height = size
                 img.resize(width=width, height=height)
+
+            # rotate
+            orientation = 0
+            for k, v in img.metadata.items():
+                if k == 'exif:Orientation':
+                    orientation = v
+                    break
+            if orientation == 3:
+                img.rotate(180)
+            elif orientation == 6:
+                img.rotate(90)
+            elif orientation == 8:
+                img.rotate(270)
 
             # save
             img.save(filename=path)
