@@ -12,7 +12,8 @@ import random
 celery  # to remove PEP error (not used error)
 
 
-@periodic_task(crontab(hour=0, minute=0))
+# @periodic_task(crontab(hour=0, minute=0))
+@periodic_task(run_every=timedelta(hours=1))
 def win():
     app = create_app()
     with app.app_context():

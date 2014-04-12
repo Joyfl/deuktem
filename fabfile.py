@@ -269,14 +269,14 @@ def setup_rmq():
         print blue("Done")
 
 
-@_setup
+# @_setup
 def celery(cmd=None, worker=None):
     if cmd == 'start':
         r = local("celery multi start %(celery_workers)s"
                   " --hostname=%(celery_hostname)s"
                   " -B -A deuktem.tasks"  # celery beat
                   " --schedule=%(path_celery_schedule)s"
-                  " --logfile=%(path_celery_log)s "
+                  " --logfile=%(path_celery_log)s"
                   " --pidfile=%(path_celery_pid)s" % config, capture=True)
         print r.stderr
 
@@ -285,7 +285,7 @@ def celery(cmd=None, worker=None):
                   " --hostname=%(celery_hostname)s"
                   " -B -A deuktem.tasks"  # celery beat
                   " --schedule=%(path_celery_schedule)s"
-                  " --logfile=%(path_celery_log)s "
+                  " --logfile=%(path_celery_log)s"
                   " --pidfile=%(path_celery_pid)s" % config, capture=True)
         print r.stderr
 
